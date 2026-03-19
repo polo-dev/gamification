@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mon compte — Mes Badges</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wengo-blue: #2c3e6b;
+            --wengo-coral: #e8636a;
+            --wengo-coral-light: #fdf0f0;
+            --wengo-grey-bg: #f7f8fa;
+            --wengo-grey-border: #e5e7eb;
+            --wengo-grey-text: #6b7280;
+            --wengo-dark: #1f2937;
+            --wengo-white: #ffffff;
+
+            /* Badge tier colors */
+            --tier-silver: #a8b2bd;
+            --tier-silver-bg: #f0f2f5;
+            --tier-silver-shine: #c8cfd8;
+            --tier-gold: #d4a020;
+            --tier-gold-bg: #fdf8ed;
+            --tier-gold-shine: #f0d060;
+            --tier-platine: #7b8ea8;
+            --tier-platine-bg: #f0f3f7;
+            --tier-platine-shine: #a8c0d8;
+            --tier-diamant: #6c5ce7;
+            --tier-diamant-bg: #f3f1fd;
+            --tier-diamant-shine: #a29bfe;
+
+            --locked-bg: #f3f4f6;
+            --locked-icon: #d1d5db;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--wengo-grey-bg);
+            color: var(--wengo-dark);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ─── Header (simplified from Wengo) ─── */
+        .wg-header {
+            background: var(--wengo-white);
+            border-bottom: 1px solid var(--wengo-grey-border);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .wg-header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .wg-header-logo svg { height: 32px; }
+        .wg-header-logo span {
+            font-size: 13px;
+            color: var(--wengo-grey-text);
+            border-left: 1px solid var(--wengo-grey-border);
+            padding-left: 12px;
+        }
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .header-right .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--wengo-blue);
+        }
+        .header-right .avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: var(--wengo-coral-light);
+            border: 2px solid var(--wengo-coral);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600;
+            color: var(--wengo-coral);
+        }
+
+        /* ─── Layout ─── */
+        .layout {
+            display: flex;
+            max-width: 1280px;
+            margin: 0 auto;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* ─── Sidebar ─── */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: var(--wengo-white);
+            border-right: 1px solid var(--wengo-grey-border);
+            padding: 24px 0;
+        }
+        .sidebar-user {
+            text-align: center;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--wengo-grey-border);
+        }
+        .sidebar-user .name { font-weight: 600; font-size: 15px; color: var(--wengo-dark); }
+        .sidebar-user .expert-link {
+            font-size: 13px;
+            color: var(--wengo-coral);
+            text-decoration: none;
+            display: block;
+            margin-top: 4px;
+        }
+        .sidebar-nav { padding: 16px 0; }
+        .sidebar-nav .nav-section {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--wengo-grey-text);
+            padding: 12px 20px 6px;
+        }
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            color: var(--wengo-dark);
+            transition: background 0.15s;
+        }
+        .sidebar-nav a:hover { background: var(--wengo-grey-bg); }
+        .sidebar-nav a.active {
+            background: var(--wengo-coral-light);
+            color: var(--wengo-coral);
+            font-weight: 600;
+            border-right: 3px solid var(--wengo-coral);
+        }
+        .sidebar-nav a .nav-icon {
+            width: 18px;
+            text-align: center;
+            font-size: 15px;
+            opacity: 0.6;
+        }
+
+        /* ─── Main content ─── */
+        .main {
+            flex: 1;
+            padding: 32px 40px 60px;
+            overflow-y: auto;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--wengo-dark);
+            margin-bottom: 6px;
+        }
+        .page-subtitle {
+            font-size: 15px;
+            color: var(--wengo-grey-text);
+            margin-bottom: 32px;
+        }
+
+        /* ─── Summary bar ─── */
+        .summary-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+        .summary-card {
+            flex: 1;
+            background: var(--wengo-white);
+            border: 1px solid var(--wengo-grey-border);
+            border-radius: 12px;
+            padding: 18px 20px;
+            text-align: center;
+        }
+        .summary-card .num {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--wengo-blue);
+        }
+        .summary-card .label {
+            font-size: 13px;
+            color: var(--wengo-grey-text);
+            margin-top: 2px;
+        }
+        .summary-card.highlight {
+            background: linear-gradient(135deg, var(--wengo-coral) 0%, #c0505a 100%);
+            border-color: transparent;
+        }
+        .summary-card.highlight .num { color: #fff; }
+        .summary-card.highlight .label { color: rgba(255,255,255,0.8); }
+
+        /* ─── Category section ─── */
+        .category {
+            margin-bottom: 36px;
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .category-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+        .category-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--wengo-dark);
+        }
+        .category-count {
+            font-size: 12px;
+            color: var(--wengo-grey-text);
+            margin-left: auto;
+        }
+
+        /* ─── Badge grid ─── */
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 16px;
+        }
+
+        /* ─── Badge card ─── */
+        .badge-card {
+            background: var(--wengo-white);
+            border: 1px solid var(--wengo-grey-border);
+            border-radius: 14px;
+            padding: 22px 18px 18px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: default;
+        }
+        .badge-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+        }
+        .badge-card.locked {
+            background: var(--locked-bg);
+            border-color: #e5e7eb;
+        }
+        .badge-card.locked .badge-icon-wrap { opacity: 0.35; filter: grayscale(1); }
+        .badge-card.locked .badge-name { color: #9ca3af; }
+        .badge-card.locked .badge-desc { color: #c0c5cc; }
+
+        /* Tier accent top border */
+        .badge-card.tier-silver { border-top: 3px solid var(--tier-silver); }
+        .badge-card.tier-gold   { border-top: 3px solid var(--tier-gold); }
+        .badge-card.tier-platine { border-top: 3px solid var(--tier-platine); }
+        .badge-card.tier-diamant { border-top: 3px solid var(--tier-diamant); }
+        .badge-card.tier-oneshot { border-top: 3px solid var(--wengo-coral); }
+
+        /* ─── Badge icon ─── */
+        .badge-icon-wrap {
+            width: 64px; height: 64px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .badge-icon-wrap svg { width: 34px; height: 34px; }
+
+        /* Tier ring colors */
+        .tier-silver .badge-icon-wrap { background: var(--tier-silver-bg); box-shadow: 0 0 0 3px var(--tier-silver); }
+        .tier-gold .badge-icon-wrap   { background: var(--tier-gold-bg);   box-shadow: 0 0 0 3px var(--tier-gold); }
+        .tier-platine .badge-icon-wrap { background: var(--tier-platine-bg); box-shadow: 0 0 0 3px var(--tier-platine); }
+        .tier-diamant .badge-icon-wrap { background: var(--tier-diamant-bg); box-shadow: 0 0 0 3px var(--tier-diamant); }
+        .tier-oneshot .badge-icon-wrap { background: var(--wengo-coral-light); box-shadow: 0 0 0 3px var(--wengo-coral); }
+        .locked .badge-icon-wrap { background: #eee; box-shadow: 0 0 0 3px #d1d5db; }
+
+        /* ─── Tier pill ─── */
+        .tier-pill {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .tier-pill.silver  { background: var(--tier-silver-bg); color: #6b7585; }
+        .tier-pill.gold    { background: var(--tier-gold-bg);   color: #9a7510; }
+        .tier-pill.platine { background: var(--tier-platine-bg); color: #5a6e82; }
+        .tier-pill.diamant { background: var(--tier-diamant-bg); color: #5a4bd4; }
+        .tier-pill.oneshot { background: var(--wengo-coral-light); color: var(--wengo-coral); }
+
+        /* ─── Badge text ─── */
+        .badge-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wengo-dark);
+            margin-bottom: 4px;
+        }
+        .badge-desc {
+            font-size: 12px;
+            color: var(--wengo-grey-text);
+            line-height: 1.4;
+            margin-bottom: 12px;
+            min-height: 34px;
+        }
+
+        /* ─── Progress bar ─── */
+        .progress-wrap {
+            margin-top: auto;
+        }
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--wengo-grey-text);
+            margin-bottom: 5px;
+        }
+        .progress-labels .current { font-weight: 600; color: var(--wengo-dark); }
+        .progress-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+        .tier-silver .progress-fill  { background: var(--tier-silver); }
+        .tier-gold .progress-fill    { background: linear-gradient(90deg, var(--tier-gold), var(--tier-gold-shine)); }
+        .tier-platine .progress-fill { background: linear-gradient(90deg, var(--tier-platine), var(--tier-platine-shine)); }
+        .tier-diamant .progress-fill { background: linear-gradient(90deg, var(--tier-diamant), var(--tier-diamant-shine)); }
+        .tier-oneshot .progress-fill { background: var(--wengo-coral); }
+
+        .next-tier {
+            font-size: 11px;
+            color: var(--wengo-grey-text);
+            margin-top: 6px;
+        }
+        .next-tier strong { color: var(--wengo-dark); }
+
+        /* ─── Completed check ─── */
+        .badge-completed {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #10b981;
+            margin-top: 4px;
+        }
+        .badge-completed svg { width: 14px; height: 14px; }
+
+        /* ─── Locked overlay text ─── */
+        .lock-hint {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        /* ─── Tier dots (mini progression) ─── */
+        .tier-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .tier-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
+            background: transparent;
+            position: relative;
+        }
+        .tier-dot.reached { border-color: currentColor; background: currentColor; }
+        .tier-dot.silver  { color: var(--tier-silver); }
+        .tier-dot.gold    { color: var(--tier-gold); }
+        .tier-dot.platine { color: var(--tier-platine); }
+        .tier-dot.diamant { color: var(--tier-diamant); }
+
+        .tier-dot-label {
+            position: absolute;
+            bottom: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .tier-dot:hover .tier-dot-label { opacity: 1; }
+
+        /* ─── Filter tabs ─── */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .filter-tab {
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid var(--wengo-grey-border);
+            background: var(--wengo-white);
+            color: var(--wengo-grey-text);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .filter-tab:hover { border-color: var(--wengo-coral); color: var(--wengo-coral); }
+        .filter-tab.active {
+            background: var(--wengo-coral);
+            border-color: var(--wengo-coral);
+            color: #fff;
+        }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 960px) {
+            .sidebar { display: none; }
+            .main { padding: 24px 20px 40px; }
+            .summary-bar { flex-wrap: wrap; }
+            .summary-card { min-width: 140px; }
+        }
+
+        /* ─── Animations ─── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .badge-card {
+            animation: fadeInUp 0.4s ease both;
+        }
+        .badge-grid .badge-card:nth-child(1) { animation-delay: 0.02s; }
+        .badge-grid .badge-card:nth-child(2) { animation-delay: 0.06s; }
+        .badge-grid .badge-card:nth-child(3) { animation-delay: 0.1s; }
+        .badge-grid .badge-card:nth-child(4) { animation-delay: 0.14s; }
+        .badge-grid .badge-card:nth-child(5) { animation-delay: 0.18s; }
+        .badge-grid .badge-card:nth-child(6) { animation-delay: 0.22s; }
+
+        /* tooltip */
+        .badge-card[data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--wengo-dark);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header class="wg-header">
+    <a href="#" class="wg-header-logo">
+        <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+            <text x="0" y="28" font-family="'Playfair Display', serif" font-size="26" font-weight="700" fill="#2c3e6b">wengo</text>
+        </svg>
+        <span>Consultations mieux-être à distance</span>
+    </a>
+    <div class="header-right">
+        <span class="user-name">paulreinhardt</span>
+        <div class="avatar">P</div>
+    </div>
+</header>
+
+<!-- ════════ LAYOUT ════════ -->
+<div class="layout">
+
+    <!-- ─── Sidebar ─── -->
+    <aside class="sidebar">
+        <div class="sidebar-user">
+            <div class="name">paulreinhardt</div>
+            <a href="#" class="expert-link">Mon espace expert</a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">Tableau de bord</div>
+            <a href="#"><span class="nav-icon">🏠</span> Mon tableau de bord</a>
+
+            <div class="nav-section">Mes informations</div>
+            <a href="#"><span class="nav-icon">👤</span> Mon profil</a>
+            <a href="#"><span class="nav-icon">💳</span> Mes cartes de crédit</a>
+
+            <div class="nav-section">Mes experts et moi</div>
+            <a href="#"><span class="nav-icon">❤️</span> Mes experts</a>
+            <a href="#"><span class="nav-icon">💬</span> Mes consultations</a>
+            <a href="#"><span class="nav-icon">✉️</span> Mes consultations par e-mail</a>
+            <a href="#"><span class="nav-icon">📅</span> Mes rendez-vous</a>
+
+            <div class="nav-section">Mes offres</div>
+            <a href="#"><span class="nav-icon">⭐</span> Wengo Rewards</a>
+            <a href="#" class="active"><span class="nav-icon">🏆</span> Mes Badges</a>
+            <a href="#"><span class="nav-icon">🤝</span> Mon offre de parrainage</a>
+            <a href="#"><span class="nav-icon">🛒</span> Mes contenus</a>
+        </nav>
+    </aside>
+
+    <!-- ─── Main ─── -->
+    <main class="main">
+        <h1 class="page-title">Mes Badges</h1>
+        <p class="page-subtitle">Suivez votre progression et débloquez de nouvelles récompenses au fil de vos consultations.</p>
+
+        <!-- Summary -->
+        <div class="summary-bar">
+            <div class="summary-card">
+                <div class="num">12</div>
+                <div class="label">Badges débloqués</div>
+            </div>
+            <div class="summary-card">
+                <div class="num">9</div>
+                <div class="label">À débloquer</div>
+            </div>
+            <div class="summary-card highlight">
+                <div class="num">3</div>
+                <div class="label">Presque atteints !</div>
+            </div>
+            <div class="summary-card">
+                <div class="num">Or</div>
+                <div class="label">Meilleur palier atteint</div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterBadges('all')">Tous</button>
+            <button class="filter-tab" onclick="filterBadges('unlocked')">Débloqués</button>
+            <button class="filter-tab" onclick="filterBadges('locked')">À débloquer</button>
+            <button class="filter-tab" onclick="filterBadges('premiers-pas')">Premiers pas</button>
+            <button class="filter-tab" onclick="filterBadges('consultations')">Consultations</button>
+            <button class="filter-tab" onclick="filterBadges('fidelite')">Fidélité</button>
+            <button class="filter-tab" onclick="filterBadges('achats')">Achats & Box</button>
+            <button class="filter-tab" onclick="filterBadges('special')">Spéciaux</button>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- CATEGORY: Premiers pas -->
+        <!-- ═══════════════════════════════════════ -->
+        <section class="category" data-cat="premiers-pas">
+            <div class="category-header">
+                <div class="category-icon" style="background: var(--wengo-coral-light); color: var(--wengo-coral);">🚀</div>
+                <h2 class="category-title">Premiers pas</h2>
+                <span class="category-count">5/7 débloqués</span>
+            </div>
+            <div class="badge-grid">
+
+                <!-- Premier contact — UNLOCKED -->
+                <div class="badge-card tier-oneshot" data-status="unlocked">
+                    <span class="tier-pill oneshot">✓</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="18" stroke="#e8636a" stroke-width="2" fill="none"/>
+                            <path d="M24 14v10l7 4" stroke="#e8636a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Premier contact</div>
+                    <div class="badge-desc">Première mise en relation sur la plateforme</div>
+                    <div class="badge-completed">
+                        <svg viewBox="0 0 20 20" fill="#10b981"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        Obtenu le 12 jan. 2024
+                    </div>
+                </div>
+
+                <!-- Premier appel — UNLOCKED -->
+                <div class="badge-card tier-oneshot" data-status="unlocked">
+                    <span class="tier-pill oneshot">✓</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18.5 13.5c.5-1.5 2-2.5 3.5-2.5h4c1.5 0 3 1 3.5 2.5l1 3c.3 1-.2 2-1 2.5l-2.5 1.5c1.5 3 3.5 5 6.5 6.5l1.5-2.5c.5-.8 1.5-1.3 2.5-1l3 1c1.5.5 2.5 2 2.5 3.5v4c0 1.5-1 3-2.5 3.5-8 2.5-18-2-23-10S12 11.5 14.5 9.5c1-.7 2.2-.8 3.2-.3l1.8 1.3" stroke="#e8636a" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Premier appel</div>
+                    <div class="badge-desc">Première consultation par téléphone</div>
+                    <div class="badge-completed">
+                        <svg viewBox="0 0 20 20" fill="#10b981"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        Obtenu le 12 jan. 2024
+                    </div>
+                </div>
+
+                <!-- Premier chat — UNLOCKED -->
+                <div class="badge-card tier-oneshot" data-status="unlocked">
+                    <span class="tier-pill oneshot">✓</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="12" width="32" height="20" rx="4" stroke="#e8636a" stroke-width="2" fill="none"/>
+                            <path d="M16 36l4-4h20" stroke="#e8636a" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <circle cx="18" cy="22" r="2" fill="#e8636a"/>
+                            <circle cx="24" cy="22" r="2" fill="#e8636a"/>
+                            <circle cx="30" cy="22" r="2" fill="#e8636a"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Premier chat</div>
+                    <div class="badge-desc">Première consultation par Chat</div>
+                    <div class="badge-completed">
+                        <svg viewBox="0 0 20 20" fill="#10b981"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        Obtenu le 3 fév. 2024
+                    </div>
+                </div>
+
+                <!-- Première étoile — UNLOCKED -->
+                <div class="badge-card tier-oneshot" data-status="unlocked">
+                    <span class="tier-pill oneshot">✓</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 8l4.5 9.2 10.1 1.5-7.3 7.1 1.7 10.1L24 31l-9 4.9 1.7-10.1-7.3-7.1 10.1-1.5L24 8z" stroke="#e8636a" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Première étoile</div>
+                    <div class="badge-desc">Premier avis laissé sur un expert</div>
+                    <div class="badge-completed">
+                        <svg viewBox="0 0 20 20" fill="#10b981"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        Obtenu le 15 fév. 2024
+                    </div>
+                </div>
+
+                <!-- Premier achat — UNLOCKED -->
+                <div class="badge-card tier-oneshot" data-status="unlocked">
+                    <span class="tier-pill oneshot">✓</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 16h24l-3 16H15L12 16z" stroke="#e8636a" stroke-width="2" fill="none"/>
+                            <circle cx="19" cy="38" r="2" fill="#e8636a"/>
+                            <circle cx="31" cy="38" r="2" fill="#e8636a"/>
+                            <path d="M12 16l-2-6H6" stroke="#e8636a" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Premier achat</div>
+                    <div class="badge-desc">Premier achat sur la plateforme</div>
+                    <div class="badge-completed">
+                        <svg viewBox="0 0 20 20" fill="#10b981"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        Obtenu le 12 jan. 2024
+                    </div>
+                </div>
+
+                <!-- Première visio — LOCKED -->
+                <div class="badge-card locked" data-status="locked">
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="14" width="24" height="18" rx="3" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                            <path d="M32 20l8-4v16l-8-4V20z" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Première visio</div>
+                    <div class="badge-desc">Première consultation par Visio</div>
+                    <div class="lock-hint">Lancez votre première visio pour débloquer</div>
+                </div>
+
+                <!-- Première question — LOCKED -->
+                <div class="badge-card locked" data-status="locked">
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="8" width="28" height="32" rx="3" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                            <path d="M17 18h14M17 24h10M17 30h12" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Première question</div>
+                    <div class="badge-desc">Première QPP envoyée</div>
+                    <div class="lock-hint">Envoyez votre première question par écrit</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- CATEGORY: Volume de consultations -->
+        <!-- ═══════════════════════════════════════ -->
+        <section class="category" data-cat="consultations">
+            <div class="category-header">
+                <div class="category-icon" style="background: #eef2ff; color: #4f46e5;">💬</div>
+                <h2 class="category-title">Volume de consultations</h2>
+                <span class="category-count">Palier Or atteint</span>
+            </div>
+            <div class="badge-grid">
+
+                <!-- Habitué·e — OR (20/50 vers Platine) -->
+                <div class="badge-card tier-gold" data-status="unlocked">
+                    <span class="tier-pill gold">Or</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="16" stroke="#d4a020" stroke-width="2.5" fill="none"/>
+                            <path d="M24 14c-5.5 0-10 4.5-10 10s4.5 10 10 10 10-4.5 10-10" stroke="#d4a020" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M24 18v6l4 3" stroke="#d4a020" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"><span class="tier-dot-label">Silver</span></div>
+                        <div class="tier-dot gold reached"><span class="tier-dot-label">Or</span></div>
+                        <div class="tier-dot platine"><span class="tier-dot-label">Platine</span></div>
+                        <div class="tier-dot diamant"><span class="tier-dot-label">Diamant</span></div>
+                    </div>
+                    <div class="badge-name">Habitué·e</div>
+                    <div class="badge-desc">Nombre total de mises en relation</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">28 consultations</span>
+                            <span>50</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 56%"></div></div>
+                        <div class="next-tier">Prochain palier : <strong>Platine</strong> (50)</div>
+                    </div>
+                </div>
+
+                <!-- Voix fidèle — SILVER (8/10 vers Or) -->
+                <div class="badge-card tier-silver" data-status="unlocked">
+                    <span class="tier-pill silver">Silver</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18.5 13.5c.5-1.5 2-2.5 3.5-2.5h4c1.5 0 3 1 3.5 2.5" stroke="#a8b2bd" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M16 22a8 8 0 1016 0" stroke="#a8b2bd" stroke-width="2.5" fill="none"/>
+                            <path d="M20 28v6M28 28v6M18 34h12" stroke="#a8b2bd" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"><span class="tier-dot-label">Silver</span></div>
+                        <div class="tier-dot gold"><span class="tier-dot-label">Or</span></div>
+                        <div class="tier-dot platine"><span class="tier-dot-label">Platine</span></div>
+                        <div class="tier-dot diamant"><span class="tier-dot-label">Diamant</span></div>
+                    </div>
+                    <div class="badge-name">Voix fidèle</div>
+                    <div class="badge-desc">Consultations par téléphone</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">8 appels</span>
+                            <span>10</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 80%"></div></div>
+                        <div class="next-tier">Plus que <strong>2 appels</strong> pour le palier Or !</div>
+                    </div>
+                </div>
+
+                <!-- Plume connectée — SILVER (5/10) -->
+                <div class="badge-card tier-silver" data-status="unlocked">
+                    <span class="tier-pill silver">Silver</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="12" width="28" height="20" rx="4" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                            <path d="M17 36l3-4h18" stroke="#a8b2bd" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M18 20h12M18 26h8" stroke="#a8b2bd" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"></div>
+                        <div class="tier-dot gold"></div>
+                        <div class="tier-dot platine"></div>
+                        <div class="tier-dot diamant"></div>
+                    </div>
+                    <div class="badge-name">Plume connectée</div>
+                    <div class="badge-desc">Consultations par Chat</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">5 chats</span>
+                            <span>10</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div>
+                        <div class="next-tier">Prochain palier : <strong>Or</strong> (10)</div>
+                    </div>
+                </div>
+
+                <!-- Face à face — LOCKED (0/3) -->
+                <div class="badge-card locked" data-status="locked">
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="14" width="24" height="18" rx="3" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                            <path d="M32 20l8-4v16l-8-4V20z" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver"></div>
+                        <div class="tier-dot gold"></div>
+                        <div class="tier-dot platine"></div>
+                        <div class="tier-dot diamant"></div>
+                    </div>
+                    <div class="badge-name">Face à face</div>
+                    <div class="badge-desc">Consultations par Visio</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">0 visio</span>
+                            <span>3</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
+                    </div>
+                    <div class="lock-hint">Silver dès 3 visio-consultations</div>
+                </div>
+
+                <!-- Esprit curieux — LOCKED (1/3) -->
+                <div class="badge-card locked" data-status="locked">
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="20" r="10" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                            <path d="M24 30v6M20 36h8" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <path d="M21 18c0-1.7 1.3-3 3-3s3 1.3 3 3c0 1.5-1 2-2 2.5-.5.3-1 .8-1 1.5" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <circle cx="24" cy="25" r="1" fill="#9ca3af"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver"></div>
+                        <div class="tier-dot gold"></div>
+                        <div class="tier-dot platine"></div>
+                        <div class="tier-dot diamant"></div>
+                    </div>
+                    <div class="badge-name">Esprit curieux</div>
+                    <div class="badge-desc">Nombre de QPP envoyées</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">1 QPP</span>
+                            <span>3</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 33%"></div></div>
+                    </div>
+                    <div class="lock-hint">Encore 2 QPP pour le Silver</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- CATEGORY: Fidélité expert -->
+        <!-- ═══════════════════════════════════════ -->
+        <section class="category" data-cat="fidelite">
+            <div class="category-header">
+                <div class="category-icon" style="background: #fef3c7; color: #d97706;">❤️</div>
+                <h2 class="category-title">Fidélité expert</h2>
+            </div>
+            <div class="badge-grid">
+
+                <!-- Top Fan — OR (12/25 vers Platine) -->
+                <div class="badge-card tier-gold" data-status="unlocked">
+                    <span class="tier-pill gold">Or</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 38s-14-8.3-14-18.5C10 13.6 14.5 10 19 10c2.5 0 4 1.5 5 3 1-1.5 2.5-3 5-3 4.5 0 9 3.6 9 9.5C38 29.7 24 38 24 38z" stroke="#d4a020" stroke-width="2.5" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"></div>
+                        <div class="tier-dot gold reached"></div>
+                        <div class="tier-dot platine"></div>
+                        <div class="tier-dot diamant"></div>
+                    </div>
+                    <div class="badge-name">Top Fan</div>
+                    <div class="badge-desc">Consultations avec un même expert</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">12 consultations</span>
+                            <span>25</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 48%"></div></div>
+                        <div class="next-tier">Prochain palier : <strong>Platine</strong> (25)</div>
+                    </div>
+                </div>
+
+                <!-- Cercle de confiance — SILVER (5/7) -->
+                <div class="badge-card tier-silver" data-status="unlocked">
+                    <span class="tier-pill silver">Silver</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="16" r="6" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                            <circle cx="14" cy="28" r="4" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                            <circle cx="34" cy="28" r="4" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                            <path d="M18 34c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"></div>
+                        <div class="tier-dot gold"></div>
+                        <div class="tier-dot platine"></div>
+                        <div class="tier-dot diamant"></div>
+                    </div>
+                    <div class="badge-name">Cercle de confiance</div>
+                    <div class="badge-desc">Consulter plusieurs experts différents</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">5 experts</span>
+                            <span>7</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 71%"></div></div>
+                        <div class="next-tier">Plus que <strong>2 experts</strong> pour le palier Or !</div>
+                    </div>
+                </div>
+
+                <!-- Explorateur·rice — SILVER (2/3) -->
+                <div class="badge-card tier-silver" data-status="unlocked">
+                    <span class="tier-pill silver">Silver</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="14" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                            <path d="M30 18l-3 9-9 3 3-9 9-3z" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                            <circle cx="24" cy="24" r="2" fill="#a8b2bd"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"></div>
+                        <div class="tier-dot gold"></div>
+                        <div class="tier-dot platine"></div>
+                    </div>
+                    <div class="badge-name">Explorateur·rice</div>
+                    <div class="badge-desc">Utiliser différents canaux de consultation</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">2 canaux</span>
+                            <span>3</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 66%"></div></div>
+                        <div class="next-tier">Essayez la <strong>Visio</strong> pour atteindre Or !</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- CATEGORY: Achats & Box -->
+        <!-- ═══════════════════════════════════════ -->
+        <section class="category" data-cat="achats">
+            <div class="category-header">
+                <div class="category-icon" style="background: #f0fdf4; color: #16a34a;">📦</div>
+                <h2 class="category-title">Achats & Box</h2>
+            </div>
+            <div class="badge-grid">
+
+                <!-- Collectionneur·se — PLATINE (16/30) -->
+                <div class="badge-card tier-platine" data-status="unlocked">
+                    <span class="tier-pill platine">Platine</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="18" width="28" height="20" rx="3" stroke="#7b8ea8" stroke-width="2" fill="none"/>
+                            <path d="M10 18l4-8h20l4 8" stroke="#7b8ea8" stroke-width="2" fill="none"/>
+                            <path d="M24 10v8M18 18h12" stroke="#7b8ea8" stroke-width="2" fill="none"/>
+                            <path d="M20 26h8M24 26v6" stroke="#7b8ea8" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"></div>
+                        <div class="tier-dot gold reached"></div>
+                        <div class="tier-dot platine reached"></div>
+                        <div class="tier-dot diamant"></div>
+                    </div>
+                    <div class="badge-name">Collectionneur·se</div>
+                    <div class="badge-desc">Nombre de box achetées</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">16 box</span>
+                            <span>30</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 53%"></div></div>
+                        <div class="next-tier">Prochain palier : <strong>Diamant</strong> (30)</div>
+                    </div>
+                </div>
+
+                <!-- Bibliothèque mystique — SILVER (4/10) -->
+                <div class="badge-card tier-silver" data-status="unlocked">
+                    <span class="tier-pill silver">Silver</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 12v24l14-6 14 6V12L24 18 10 12z" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                            <path d="M24 18v12" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"></div>
+                        <div class="tier-dot gold"></div>
+                        <div class="tier-dot platine"></div>
+                        <div class="tier-dot diamant"></div>
+                    </div>
+                    <div class="badge-name">Bibliothèque mystique</div>
+                    <div class="badge-desc">PDFs collectés</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">4 PDFs</span>
+                            <span>10</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div>
+                        <div class="next-tier">Prochain palier : <strong>Or</strong> (10)</div>
+                    </div>
+                </div>
+
+                <!-- Astro addict — LOCKED (2/3) -->
+                <div class="badge-card locked" data-status="locked">
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="10" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                            <path d="M24 14a10 10 0 000 20" stroke="#9ca3af" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+                            <circle cx="24" cy="24" r="3" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver"></div>
+                        <div class="tier-dot gold"></div>
+                        <div class="tier-dot platine"></div>
+                        <div class="tier-dot diamant"></div>
+                    </div>
+                    <div class="badge-name">Astro addict</div>
+                    <div class="badge-desc">Rapports / horoscopes consultés</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">2 rapports</span>
+                            <span>3</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 66%"></div></div>
+                    </div>
+                    <div class="lock-hint">Encore 1 rapport pour le Silver !</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- CATEGORY: Badges spéciaux / saisonniers -->
+        <!-- ═══════════════════════════════════════ -->
+        <section class="category" data-cat="special">
+            <div class="category-header">
+                <div class="category-icon" style="background: #fdf4ff; color: #a855f7;">✨</div>
+                <h2 class="category-title">Badges spéciaux & saisonniers</h2>
+                <span class="category-count">2/5 débloqués</span>
+            </div>
+            <div class="badge-grid">
+
+                <!-- Noctambule — UNLOCKED -->
+                <div class="badge-card tier-oneshot" data-status="unlocked">
+                    <span class="tier-pill oneshot">✓</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M32 16a12 12 0 11-16 16 10 10 0 0016-16z" stroke="#e8636a" stroke-width="2" fill="none"/>
+                            <circle cx="30" cy="14" r="1.5" fill="#e8636a"/>
+                            <circle cx="36" cy="20" r="1" fill="#e8636a"/>
+                            <circle cx="34" cy="10" r="1" fill="#e8636a"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Noctambule</div>
+                    <div class="badge-desc">Consulter après minuit</div>
+                    <div class="badge-completed">
+                        <svg viewBox="0 0 20 20" fill="#10b981"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        Obtenu le 3 mars 2024
+                    </div>
+                </div>
+
+                <!-- Étoile de Noël — UNLOCKED -->
+                <div class="badge-card tier-oneshot" data-status="unlocked">
+                    <span class="tier-pill oneshot">✓</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 8l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6l2-6z" stroke="#e8636a" stroke-width="2" fill="none"/>
+                            <path d="M14 30l4 2M34 30l-4 2M18 36l2 2M30 36l-2 2M24 38v4" stroke="#e8636a" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Étoile de Noël</div>
+                    <div class="badge-desc">Consulter pendant les fêtes</div>
+                    <div class="badge-completed">
+                        <svg viewBox="0 0 20 20" fill="#10b981"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        Obtenu le 25 déc. 2024
+                    </div>
+                </div>
+
+                <!-- Saint-Valentin — LOCKED -->
+                <div class="badge-card locked" data-status="locked">
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 38s-14-8.3-14-18.5C10 13.6 14.5 10 19 10c2.5 0 4 1.5 5 3 1-1.5 2.5-3 5-3 4.5 0 9 3.6 9 9.5C38 29.7 24 38 24 38z" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Saint-Valentin</div>
+                    <div class="badge-desc">Consulter le 14 février</div>
+                    <div class="lock-hint">Disponible chaque 14 février</div>
+                </div>
+
+                <!-- Éclipse — LOCKED -->
+                <div class="badge-card locked" data-status="locked">
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="12" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                            <circle cx="20" cy="24" r="12" stroke="#9ca3af" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Éclipse</div>
+                    <div class="badge-desc">Consulter un jour d'éclipse</div>
+                    <div class="lock-hint">Événement rare — restez à l'affût !</div>
+                </div>
+
+                <!-- Anniversaire — LOCKED -->
+                <div class="badge-card locked" data-status="locked">
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="22" width="28" height="16" rx="3" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                            <path d="M10 28h28" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                            <path d="M20 22v-4a4 4 0 018 0v4" stroke="#9ca3af" stroke-width="2" fill="none"/>
+                            <path d="M24 14v-4M22 10l2 2 2-2" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="badge-name">Anniversaire</div>
+                    <div class="badge-desc">Consulter le jour de votre anniversaire</div>
+                    <div class="lock-hint">Offrez-vous une consultation ce jour-là !</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- CATEGORY: Engagement & Régularité -->
+        <!-- ═══════════════════════════════════════ -->
+        <section class="category" data-cat="fidelite">
+            <div class="category-header">
+                <div class="category-icon" style="background: #ecfdf5; color: #059669;">🔥</div>
+                <h2 class="category-title">Engagement & Régularité</h2>
+            </div>
+            <div class="badge-grid">
+
+                <!-- Fidèle de longue date — DIAMANT -->
+                <div class="badge-card tier-diamant" data-status="unlocked">
+                    <span class="tier-pill diamant">Diamant</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 18h20l-10 20L14 18z" stroke="#6c5ce7" stroke-width="2" fill="none"/>
+                            <path d="M14 18l5-8h10l5 8" stroke="#6c5ce7" stroke-width="2" fill="none"/>
+                            <path d="M19 10l5 8 5-8" stroke="#6c5ce7" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"></div>
+                        <div class="tier-dot gold reached"></div>
+                        <div class="tier-dot platine reached"></div>
+                        <div class="tier-dot diamant reached"></div>
+                    </div>
+                    <div class="badge-name">Fidèle de longue date</div>
+                    <div class="badge-desc">Ancienneté sur la plateforme</div>
+                    <div class="badge-completed">
+                        <svg viewBox="0 0 20 20" fill="#10b981"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                        Palier max atteint — 2+ ans
+                    </div>
+                </div>
+
+                <!-- Rituels — SILVER (4/7 vers Or) -->
+                <div class="badge-card tier-silver" data-status="unlocked">
+                    <span class="tier-pill silver">Silver</span>
+                    <div class="badge-icon-wrap">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 10v4M24 34v4M10 24h4M34 24h4" stroke="#a8b2bd" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            <circle cx="24" cy="24" r="10" stroke="#a8b2bd" stroke-width="2" fill="none"/>
+                            <path d="M24 18v6l4 2" stroke="#a8b2bd" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="tier-dots">
+                        <div class="tier-dot silver reached"></div>
+                        <div class="tier-dot gold"></div>
+                        <div class="tier-dot platine"></div>
+                        <div class="tier-dot diamant"></div>
+                    </div>
+                    <div class="badge-name">Rituels</div>
+                    <div class="badge-desc">Jours consécutifs de connexion</div>
+                    <div class="progress-wrap">
+                        <div class="progress-labels">
+                            <span class="current">4 jours 🔥</span>
+                            <span>7</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="width: 57%"></div></div>
+                        <div class="next-tier">Encore <strong>3 jours</strong> pour le palier Or !</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    function filterBadges(filter) {
+        // Update active tab
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+
+        const categories = document.querySelectorAll('.category');
+        const cards = document.querySelectorAll('.badge-card');
+
+        if (filter === 'all') {
+            categories.forEach(c => c.style.display = '');
+            cards.forEach(c => c.style.display = '');
+            return;
+        }
+
+        if (filter === 'unlocked') {
+            categories.forEach(c => c.style.display = '');
+            cards.forEach(c => {
+                c.style.display = c.dataset.status === 'unlocked' ? '' : 'none';
+            });
+            // Hide empty categories
+            categories.forEach(c => {
+                const visible = c.querySelectorAll('.badge-card:not([style*="display: none"])');
+                c.style.display = visible.length ? '' : 'none';
+            });
+            return;
+        }
+
+        if (filter === 'locked') {
+            categories.forEach(c => c.style.display = '');
+            cards.forEach(c => {
+                c.style.display = c.dataset.status === 'locked' ? '' : 'none';
+            });
+            categories.forEach(c => {
+                const visible = c.querySelectorAll('.badge-card:not([style*="display: none"])');
+                c.style.display = visible.length ? '' : 'none';
+            });
+            return;
+        }
+
+        // Category filter
+        categories.forEach(c => {
+            c.style.display = c.dataset.cat === filter ? '' : 'none';
+        });
+        cards.forEach(c => c.style.display = '');
+    }
+</script>
+
+</body>
+</html>
